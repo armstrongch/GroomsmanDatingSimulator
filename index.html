@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Groomsman Dating Simulator</title>
+		<style type="text/css">
+			#imageDiv {
+				background-repeat: no-repeat;
+				background-position: 50% 0%;
+			}
+			div {
+				padding: 5px;
+			}
+			* {
+				font-size: 16px;
+				text-align: center;
+			}
+			select {
+				max-width: 100%;
+			}
+		</style>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width, user-scalable=no" />
+	</head>
+	<body onload="startGame()">
+		<p id="infoDiv"></p>
+		<div id="imageDiv"></div>
+		<div id="choiceDiv"></div>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript">	
+			
+			var KevinLocationRatings =
+			{
+				"Movie Theater": 3,
+				"Beach": 2,
+				"Harvest Festival": 4,
+				"Amusement Park": 2,
+				"Fancy Restaurant": 5,
+				"Fast Food Restaurant": 1,
+				"Hike": 4,
+				"Public Park": 3,
+				"Library": 1,
+				"Haunted House": 5,
+				"Museum": 4,
+				"Concert": 5,
+				"Miniature Golf": 4,
+				"Ice Cream Parlor": 4,
+				"Planetarium": 3
+			}
+			
+			var SamLocationRatings = 
+			{
+				"Movie Theater": 2,
+				"Beach": 3,
+				"Harvest Festival": 3,
+				"Amusement Park": 4,
+				"Fancy Restaurant": 4,
+				"Fast Food Restaurant": 1,
+				"Hike": 3,
+				"Public Park": 4,
+				"Library": 1,
+				"Haunted House": 3,
+				"Museum": 4,
+				"Concert": 3,
+				"Miniature Golf": 5,
+				"Ice Cream Parlor": 5,
+				"Planetarium": 4
+			}
+			
+			var MattLocationRatings =
+			{
+				"Movie Theater": 1,
+				"Beach": 1,
+				"Harvest Festival": 3,
+				"Amusement Park": 4,
+				"Fancy Restaurant": 4,
+				"Fast Food Restaurant": 1,
+				"Hike": 4,
+				"Public Park": 3,
+				"Library": 1,
+				"Haunted House": 1,
+				"Museum": 5,
+				"Concert": 3,
+				"Miniature Golf": 5,
+				"Ice Cream Parlor": 4,
+				"Planetarium": 4
+			}
+			
+			var ThadLocationRatings = 
+			{
+				"Movie Theater": 3,
+				"Beach": 1,
+				"Harvest Festival": 4,
+				"Amusement Park": 2,
+				"Fancy Restaurant": 3,
+				"Fast Food Restaurant": 1,
+				"Hike": 4,
+				"Public Park": 4,
+				"Library": 3,
+				"Haunted House": 5,
+				"Museum": 4,
+				"Concert": 4,
+				"Miniature Golf": 2,
+				"Ice Cream Parlor": 3,
+				"Planetarium": 4
+			}
+			
+			var JoeLocationRatings = //No data yet
+			{
+				"Movie Theater": 3,
+				"Beach": 3,
+				"Harvest Festival": 3,
+				"Amusement Park": 3,
+				"Fancy Restaurant": 3,
+				"Fast Food Restaurant": 3,
+				"Hike": 3,
+				"Public Park": 3,
+				"Library": 3,
+				"Haunted House": 3,
+				"Museum": 3,
+				"Concert": 3,
+				"Miniature Golf": 3,
+				"Ice Cream Parlor": 3,
+				"Planetarium": 3
+			}
+			
+			var KevinPersonalityTraits =
+			[
+				"Consistent",
+				"Curious",
+				"Efficient",
+				"Organized",
+				"Outgoing",
+				"Energetic",
+				"Friendly",
+				"Compassionate",
+				"Secure",
+				"Confident"
+			];
+			
+			var MattPersonalityTraits =
+			[
+				"Consistent",
+				"Cautious",
+				"Efficient",
+				"Careless",
+				"Solitary",
+				"Reserved",
+				"Challenging",
+				"Compassionate",
+				"Sensitive",
+				"Nervous"
+			];
+			
+			var JoePersonalityTraits =
+			[
+			
+			];
+			
+			var SamPersonalityTraits =
+			[
+				"Inventive",
+				"Curious",
+				"Efficient",
+				"Careless",
+				"Outgoing",
+				"Reserved",
+				"Friendly",
+				"Compassionate",
+				"Secure",
+				"Confident"
+			];
+			
+			var ThadPersonalityTraits =
+			[
+				"Inventive",
+				"Curious",
+				"Efficient",
+				"Careless",
+				"Outgoing",
+				"Reserved",
+				"Challenging",
+				"Detached",
+				"Secure",
+				"Confident"
+			];
+			
+			var Groomsmen = [];
+			Groomsmen.push(newGroomsman("Kevin", KevinLocationRatings, KevinPersonalityTraits));
+			Groomsmen.push(newGroomsman("Matt", MattLocationRatings, MattPersonalityTraits));
+			Groomsmen.push(newGroomsman("Joe", JoeLocationRatings, JoePersonalityTraits));
+			Groomsmen.push(newGroomsman("Sam", SamLocationRatings, SamPersonalityTraits));
+			Groomsmen.push(newGroomsman("Thad", ThadLocationRatings, ThadPersonalityTraits));
+			
+			var currentDate;
+			
+			var dateTimeSlots = [
+				"breakfast",
+				"brunch",
+				"lunch",
+				"dinner",
+				"late night"
+			];
+			
+			var dateLocations = [
+				"Movie Theater",
+				"Beach",
+				"Harvest Festival",
+				"Amusement Park",
+				"Fancy Restaurant",
+				"Fast Food Restaurant",
+				"Hike",
+				"Public Park",
+				"Library",
+				"Haunted House",
+				"Museum",
+				"Concert",
+				"Miniature Golf",
+				"Ice Cream Parlor",
+				"Planetarium"
+			];
+			
+			var conversations = [
+				["Inventive", "On weekends, I like to recreate famous films with sock puppets."],
+				["Curious", "If I find something weird in my couch cushions, I always taste it to see what it is."],
+				["Efficient", "I can wash and dry a horse in under a minute."],
+				["Organized", "Every article of clothing I own is documented in a spreadsheet."],
+				["Outgoing", "I exchange Christmas gifts with my mailman's entire family."],
+				["Energetic", "I am banned from the library for reading excitedly to myself."],
+				["Friendly", "I never say goodbye without a hug."],
+				["Compassionate", "I am polite to telemarketers."],
+				["Sensitive", "I always cry after hanging up the phone."],
+				["Nervous", "I call the police more than once a month."],
+				["Consistent", "I eaten the same kind of sandwich for lunch every day for years."],
+				["Cautious", "I use my blinker in my own driveway, just in case."],
+				["Easy-going", "I don't fill up on gas until the meter reads 'empty'."],
+				["Careless", "I once forgot where I parked my car, so I walked home."],
+				["Solitary", "I only shop at stores with a self-checkout option."],
+				["Reserved", "I only speak when spoken to."],
+				["Challenging", "I have held a grudge for more than a decade, and I continue to hold it until the day I die."],
+				["Detached", "I once assaulted a door-to-door evangelist, and if he comes back, I'll kill him."],
+				["Secure", "I've never locked my front door."],
+				["Confident", "I like to sing karaoke without a backing track."]
+			];
+			
+			var todaysDateLocations = [];
+			
+			function newGroomsman(name, locationRatings, personalityTraits)
+			{
+				var groomsman = 
+				{
+					name: name,
+					happyImageUrl: "Happy" + name + ".jpg",
+					sadImageUrl: "Sad" + name + ".jpg",
+					neutralImageUrl: "Neutral" + name + ".jpg",
+					status: 0,
+					locationRatings: locationRatings,
+					personalityTraits: personalityTraits
+				};
+				return groomsman;
+			}
+			
+			var dayNum = 6;
+			var dateNum = 0;
+			
+			function startGame()
+			{
+				$('#infoDiv').html(
+					'Today is Sunday, July 5th! Amanda and Redbeard\'s wedding is only a week away, and you haven\'t been invited. If you want to attend the romantic event of the century, you\'ll need to seduce a groomsman to secure their coveted "plus one."'
+				);
+				$('#choiceDiv').html(
+					'<button onclick=\'continueGame()\'>Schedule Dates</button>'
+				);
+				
+				dateLocations = shuffle(dateLocations);
+			}
+			
+			function continueGame()
+			{
+				if ((dayNum == 6) || (dayNum == 8) || (dayNum == 10))
+				{
+					var dayAndNum = "Monday, July 6th";
+					if (dayNum == 8)
+					{
+						dayAndNum = "Wednesday, July 8th"
+					}
+					else if (dayNum == 10)
+					{
+						dayAndNum = "Friday, July 10th"
+					}
+					if (dateNum == 0)
+					{
+						Groomsmen = shuffle(Groomsmen);
+						for (let i = 0; i < Groomsmen.length; i++)
+						{
+							todaysDateLocations.push(dateLocations.pop());
+						}
+					}
+					currentDate = Groomsmen[dateNum];
+					drawDate();
+					$('#infoDiv').html(
+						'Today is ' + dayAndNum + ' You have a ' + dateTimeSlots[dateNum] + ' date with ' + currentDate.name + '. Where will you go?'
+					);
+					$('#choiceDiv').html(
+						'<select id=\'dateLocationSelect\'></select><br/><button onclick=\'chooseDateLocation()\'>Begin Date</button>'
+					);
+					for (let i = 0; i < todaysDateLocations.length; i++)
+					{
+						$('#dateLocationSelect').append($("<option></option>").attr("value", todaysDateLocations[i]).text(todaysDateLocations[i]));
+					}
+				}
+				else if (dayNum == 7)
+				{
+					currentDate = -1;
+					drawDate();
+					$('#infoDiv').html(
+						'Today is Tuesday, July 7th. You plan a fun day of boating with the 3 Groomsmen who like you the least, hoping to win them over. Unfortunately, your boat springs a leak in the middle of a crocodile-infested lake. The lifeboat can only hold yourself and 2 Groomsmen. Who will you leave behind?'
+					);
+					$('#choiceDiv').html(
+						'<select id=\'abandonSelect\'></select><br/><button onclick=\'abandon()\'>Abandon Groomsman</button>'
+					);
+					Groomsmen = sort_by_key(Groomsmen, 'status');
+					for (let i = 0; i < 3; i++)
+					{
+						var gm = Groomsmen[i];
+						$('#abandonSelect').append($("<option></option>").attr("value", gm.name).text(gm.name));
+					}
+				}
+				else if (dayNum == 9)
+				{
+					currentDate = -1;
+					drawDate();
+					$('#infoDiv').html(
+						'Today is Thursday, July 9th. You book a flight to the Bahamas with the 3 Groomsmen who like you the least, hoping to win them over. Unfortunately, the pilot suffers a heart attack, and the plane begins to spiral towards the ocean. You only have enough parachutes for yourself and 2 Groomsmen. Who will you leave behind?'
+					);
+					$('#choiceDiv').html(
+						'<select id=\'abandonSelect\'></select><br/><button onclick=\'abandon()\'>Abandon Groomsman</button>'
+					);
+					Groomsmen = sort_by_key(Groomsmen, 'status');
+					for (let i = 0; i < 3; i++)
+					{
+						var gm = Groomsmen[i];
+						$('#abandonSelect').append($("<option></option>").attr("value", gm.name).text(gm.name));
+					}
+				}
+				else if (dayNum == 11)
+				{
+					currentDate = -1;
+					drawDate();
+					var infoDiv = 'Today is Saturday, July 11th. The wedding is tomorrow! Which will groomsman will you ask to be your date?<br/>';
+					
+					$('#choiceDiv').html(
+						'<select id=\'finalChoice\'></select><br/><button onclick=\'choose()\'>Choose</button>'
+					);
+					
+					Groomsmen = sort_by_key(Groomsmen, 'status');
+					for (let i = 0; i < Groomsmen.length; i++)
+					{
+						var gm = Groomsmen[i];
+						if (gm.status > 0)
+						{
+							$('#finalChoice').append($("<option></option>").attr("value", gm.name).text(gm.name));
+						}
+						
+						//Perfect score = 18
+						if (gm.status == 18)
+						{
+							infoDiv += "<br/>" + gm.name + " is convinced that you are his soulmate.";
+						}
+						else if (gm.status > 10)
+						{
+							infoDiv += "<br/>" + gm.name + " thinks you're really swell.";
+						}
+						else if (gm.status > 5)
+						{
+							infoDiv += "<br/>" + gm.name + " has had a great time with you this week.";
+						}
+						else if (gm.status > 0)
+						{
+							infoDiv += "<br/>" + gm.name + " would consider spending more time with you.";
+						}
+						else if (gm.status > -5)
+						{
+							infoDiv += "<br/>" + gm.name + " would rather avoid you from now on.";
+						}
+						else if (gm.status > -10)
+						{
+							infoDiv += "<br/>" + gm.name + " thinks you're a jerk.";
+						}
+						else if (gm.status > -18)
+						{
+							infoDiv += "<br/>" + gm.name + " hates your guts.";
+						}
+						else //status == -18
+						{
+							infoDiv += "<br/>" + gm.name + " will try to kill you on sight.";
+						}
+					}
+					
+					
+					$('#infoDiv').html(
+						infoDiv
+					);
+					
+					$('#finalChoice').append($("<option></option>").attr("value", "no one").text("no one"));
+					
+				}
+			}
+			
+			function choose()
+			{
+				var choiceText = $("#finalChoice option:selected").text();
+				if (choiceText == "no one")
+				{
+					$('#infoDiv').html(
+						"You fail to find a date to the wedding."
+					);
+					$('#choiceDiv').html(
+						"Beter luck next time!"
+					);
+				}
+				else
+				{
+					for (let i = 0; i < Groomsmen.length; i++)
+					{
+						if (Groomsmen[i].name == choiceText)
+						{
+							currentDate = Groomsmen[i];
+							drawDate();
+							$('#infoDiv').html(
+								Groomsmen[i].name + " is your date to the wedding!"
+							);
+							$('#choiceDiv').html(
+								"Maybe the next wedding will be yours!<br/>Final Score: " + Groomsmen[i].status + " / 18"
+							);
+							i = Groomsmen.length;
+						}
+					}
+				}
+			}
+			
+			function abandon()
+			{
+				var abandonText = $("#abandonSelect option:selected").text();
+				for (let i = 0; i < Groomsmen.length; i++)
+				{
+					if (Groomsmen[i].name == abandonText)
+					{
+						Groomsmen.splice(i, 1);
+					}
+				}
+				$('#infoDiv').html(
+					'The two remaining groomsmen are flattered that you saved their lives. Both of them close their eyes and lean in expectantly. Which one will you kiss?'
+				);
+				$('#choiceDiv').html(
+					'<select id=\'kissSelect\'></select><br/><button onclick=\'kiss()\'>Kiss</button>'
+				);
+				for (let i = 0; i < 2; i++)
+				{
+					var gm = Groomsmen[i];
+					$('#kissSelect').append($("<option></option>").attr("value", gm.name).text(gm.name));
+				}
+				$('#kissSelect').append($("<option></option>").attr("value", "both").text("both"));
+				$('#kissSelect').append($("<option></option>").attr("value", "neither").text("neither"));
+			}
+			
+			function kiss()
+			{
+				var kissText = $("#kissSelect option:selected").text();
+				if (kissText == "both")
+				{
+					$('#infoDiv').html(
+						'You plant a quick peck on the lips of both groomsmen.'
+					);
+					for (let i = 0; i < 2; i++)
+					{
+						Groomsmen[i].status += 1;
+					}
+				}
+				else if (kissText == "neither")
+				{
+					$('#infoDiv').html(
+						'Both groomsmen open their eyes, disappointed that their rescue didn\'t end in romance.'
+					);
+					for (let i = 0; i < 2; i++)
+					{
+						Groomsmen[i].status -= 1;
+					}
+				}
+				else
+				{
+					var kissDesc = "";
+					var noKissDesc = "";
+					for (let i = 0; i < 2; i++)
+					{
+						if (Groomsmen[i].name == kissText)
+						{
+							kissDesc = "You share a passionate kiss with " + kissText + ". ";
+							Groomsmen[i].status += 3;
+						}
+						else
+						{
+							noKissDesc = Groomsmen[i].name + " storms away angrily, tears welling up in his eyes.";
+							Groomsmen[i].status -= 3;
+						}
+					}
+					$('#infoDiv').html(
+						kissDesc + noKissDesc
+					);
+				}
+				$('#choiceDiv').html(
+					'<button onclick=\'returnHome()\'>Return Home</button>'
+				);
+			}
+			
+			function returnHome()
+			{
+				dayNum++;
+				dateNum = 0;
+				continueGame();
+			}
+			
+			function chooseDateLocation()
+			{
+				var locationText = $("#dateLocationSelect option:selected").text();
+				for (let i = 0; i < todaysDateLocations.length; i++)
+				{
+					var possibleLocation = todaysDateLocations[i];
+					if (possibleLocation == locationText)
+					{
+						todaysDateLocations.splice(i, 1);
+						i = todaysDateLocations.length;
+					}
+				}
+				var statusChange = currentDate.locationRatings[locationText] - 3;
+				currentDate.status += statusChange;
+				drawDate();
+				var infoDiv = "You arrive at the " + locationText.toLowerCase() + " and " + currentDate.name;
+				switch (statusChange)
+				{
+					case -2:
+						infoDiv += " is disgusted by the location.";
+						break;
+					case -1:
+						infoDiv += " isn't thrilled about the location.";
+						break;					
+					case 0:
+						infoDiv += " is apathetic about the location.";
+						break;
+					case 1:
+						infoDiv += " is pleased with the location."
+						break;
+					case 2:
+						infoDiv += " is delighted by the location.";
+						break;
+				}
+				
+				if (currentDate.status == 0)
+				{
+					infoDiv += " He wants to learn more about you!"
+				}
+				else if (currentDate.status > 0)
+				{
+					infoDiv += " He seems happy to see you!"
+				}
+				else
+				{
+					infoDiv += " He doesn't seem to like you very much."
+				}
+				
+				$('#infoDiv').html(infoDiv);
+				$('#choiceDiv').html(
+					'<button onclick=\'makeConversation()\'>Make Conversation</button>'
+				);
+			}
+			
+			function makeConversation()
+			{
+				$('#infoDiv').html("\"Tell me a little about yourself,\" says " + currentDate.name + ".");
+				$('#choiceDiv').html(
+					'<select id=\'responseSelect\'></select><br/><button onclick=\'respond()\'>Respond</button>'
+				);
+				conversations = shuffle(conversations);
+				for (let i = 0; i < 3; i++)
+				{
+					$('#responseSelect').append($("<option></option>").attr("value", conversations[i][0]).text(conversations[i][1]));
+				}
+			}
+			
+			function respond()
+			{
+				var responseTrait = $("#responseSelect option:selected").attr("value");
+				var statusChange = -2;
+				var infoDiv = currentDate.name + " doesn't like your answer.";
+				if (currentDate.personalityTraits.includes(responseTrait))
+				{
+					statusChange = 2;
+					infoDiv = currentDate.name + " likes your answer.";
+				}
+				currentDate.status += statusChange;
+				drawDate();
+				
+				if (currentDate.status == 0)
+				{
+					infoDiv += " You're not sure if he likes you."
+				}
+				else if (currentDate.status > 0)
+				{
+					infoDiv += " He seems to enjoy your company!"
+				}
+				else
+				{
+					infoDiv += " He doesn't seem to like you."
+				}
+				$('#infoDiv').html(infoDiv);
+				$('#choiceDiv').html(
+					'<button onclick=\'endDate()\'>Say Goodbye</button>'
+				);
+			}
+			
+			function endDate()
+			{
+				if (dateNum < Groomsmen.length - 1)
+				{
+					dateNum++;
+				}
+				else
+				{
+					dateNum = 0;
+					dayNum++;
+				}
+				continueGame();
+			}
+			
+			function drawDate()
+			{
+				if (currentDate == -1)
+				{
+					$('#imageDiv').css('backgroundImage', '');
+					$('#imageDiv').css('height', '');
+				}
+				else
+				{
+					var backgroundImageUrl = currentDate.neutralImageUrl;
+					if (currentDate.status > 0)
+					{
+						backgroundImageUrl = currentDate.happyImageUrl;
+					}
+					else if (currentDate.status < 0)
+					{
+						backgroundImageUrl = currentDate.sadImageUrl;
+					}
+					
+					$('#imageDiv').css('backgroundImage', 'url(' + backgroundImageUrl + ')');
+					$('#imageDiv').css('height', $(document).height()*0.6);
+				}
+			}
+			
+			function shuffle(array) { //from: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+				var currentIndex = array.length, temporaryValue, randomIndex;
+
+				// While there remain elements to shuffle...
+				while (0 !== currentIndex) {
+
+				// Pick a remaining element...
+				randomIndex = Math.floor(Math.random() * currentIndex);
+				currentIndex -= 1;
+
+				// And swap it with the current element.
+				temporaryValue = array[currentIndex];
+				array[currentIndex] = array[randomIndex];
+				array[randomIndex] = temporaryValue;
+				}
+
+				return array;
+			}
+			
+			function sort_by_key(array, key) //from: https://stackoverflow.com/questions/8175093/simple-function-to-sort-an-array-of-objects/8175221#8175221
+			{
+			 return array.sort(function(a, b)
+			 {
+			  var x = a[key]; var y = b[key];
+			  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+			 });
+			}
+		</script>
+	</body>
+</html>
