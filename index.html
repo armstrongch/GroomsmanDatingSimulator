@@ -105,22 +105,22 @@
 				"Planetarium": 4
 			}
 			
-			var JoeLocationRatings = //No data yet
+			var JoeLocationRatings =
 			{
 				"Movie Theater": 3,
-				"Beach": 3,
+				"Beach": 5,
 				"Harvest Festival": 3,
-				"Amusement Park": 3,
-				"Fancy Restaurant": 3,
+				"Amusement Park": 4,
+				"Fancy Restaurant": 4,
 				"Fast Food Restaurant": 3,
-				"Hike": 3,
-				"Public Park": 3,
-				"Library": 3,
-				"Haunted House": 3,
+				"Hike": 5,
+				"Public Park": 2,
+				"Library": 1,
+				"Haunted House": 2,
 				"Museum": 3,
 				"Concert": 3,
-				"Miniature Golf": 3,
-				"Ice Cream Parlor": 3,
+				"Miniature Golf": 4,
+				"Ice Cream Parlor": 4,
 				"Planetarium": 3
 			}
 			
@@ -154,7 +154,16 @@
 			
 			var JoePersonalityTraits =
 			[
-			
+				"Consistent",
+				"Curious",
+				"Easy-going",
+				"Careless",
+				"Outgoing",
+				"Energetic",
+				"Friendly",
+				"Compassionate",
+				"Sensitive",
+				"Confident"
 			];
 			
 			var SamPersonalityTraits =
@@ -269,7 +278,7 @@
 					'Today is Sunday, July 5th! Amanda and Redbeard\'s wedding is only a week away, and you haven\'t been invited. If you want to attend the romantic event of the century, you\'ll need to seduce a groomsman to secure their coveted "plus one."'
 				);
 				$('#choiceDiv').html(
-					'<button onclick=\'continueGame()\'>Schedule Dates</button>'
+					'<button onclick=\'continueGame()\'>Schedule Dates</button><br/><br/><p>Version 1.1 is live on 2/26/2020.<p/>Updates: Joe has a personality. The difficulty has been reduced; groomsmen are more likely to fall in love.</p>'
 				);
 				
 				dateLocations = shuffle(dateLocations);
@@ -363,15 +372,15 @@
 						}
 						
 						//Perfect score = 18
-						if (gm.status == 18)
+						if (gm.status == 10)
 						{
 							infoDiv += "<br/>" + gm.name + " is convinced that you are his soulmate.";
 						}
-						else if (gm.status > 10)
+						else if (gm.status > 6)
 						{
 							infoDiv += "<br/>" + gm.name + " thinks you're really swell.";
 						}
-						else if (gm.status > 5)
+						else if (gm.status > 3)
 						{
 							infoDiv += "<br/>" + gm.name + " has had a great time with you this week.";
 						}
@@ -379,15 +388,15 @@
 						{
 							infoDiv += "<br/>" + gm.name + " would consider spending more time with you.";
 						}
-						else if (gm.status > -5)
+						else if (gm.status > -3)
 						{
 							infoDiv += "<br/>" + gm.name + " would rather avoid you from now on.";
 						}
-						else if (gm.status > -10)
+						else if (gm.status > -6)
 						{
 							infoDiv += "<br/>" + gm.name + " thinks you're a jerk.";
 						}
-						else if (gm.status > -18)
+						else if (gm.status > -10)
 						{
 							infoDiv += "<br/>" + gm.name + " hates your guts.";
 						}
@@ -431,7 +440,7 @@
 								Groomsmen[i].name + " is your date to the wedding!"
 							);
 							$('#choiceDiv').html(
-								"Maybe the next wedding will be yours!<br/>Final Score: " + Groomsmen[i].status + " / 18"
+								"Maybe the next wedding will be yours!<br/>Final Score: " + Groomsmen[i].status
 							);
 							i = Groomsmen.length;
 						}
