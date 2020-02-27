@@ -371,8 +371,8 @@
 							$('#finalChoice').append($("<option></option>").attr("value", gm.name).text(gm.name));
 						}
 						
-						//Perfect score = 18
-						if (gm.status == 10)
+						//Perfect score = 15
+						if (gm.status >= 10)
 						{
 							infoDiv += "<br/>" + gm.name + " is convinced that you are his soulmate.";
 						}
